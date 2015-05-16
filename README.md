@@ -18,14 +18,14 @@ But because this jar is not yet published in maven repository, so I installed it
 
 
 ###google speech api
-This module is responsible for wrap your apikey and post http with the flac file you provided.  
-The `APIRequest` will return all String provided by google, which means there will have 2 json.
+This module is responsible for wrapping your api key and posting http request with the flac file you provided to Google.  If anyone has problem with APIkey, you can refer to my [post](http://rugal.ga/developement/2015/05/16/tutorial-to-use-google-speech-api/).  
+The `APIRequest` will return all String provided by google, which means there will have 2 json divided by a `\n`.
 
 ###keyboard operator
-My plan for this module is that, this daemon will listen to any instructor you give to it and trigger keyboard event to do work like human.  
-Till now I implemented this module with basic function by using mouse clicking to instruct it. 
+My plan for this module is that, this daemon will listen to any instruction you give to it and trigger keyboard event to do work like human.  So later on it should listen to the transcript back from google speech API.  
+Till now I implemented this module with basic function by using mouse click to instruct it. 
 I will soon delete all those naive code and implement a real daemon robot.
 
 
 ###integration
-My plan is, after finished these three modules, I will integrate them in this module for the sake of tidy. I hate messy code. That's why I did a lot of change to [J.A.R.V.I.S.](https://github.com/lkuza2/java-speech-api)
+My plan is, after finished these three modules, I will integrate them in this module for the sake of tidy. I hate messy code. That's why I did a lot of changes and refactors to [J.A.R.V.I.S.](https://github.com/lkuza2/java-speech-api)
