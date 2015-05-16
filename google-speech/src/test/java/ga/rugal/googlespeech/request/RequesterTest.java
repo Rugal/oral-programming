@@ -10,7 +10,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Administrator
+ * @author Rugal Bernstein
  */
 public class RequesterTest
 {
