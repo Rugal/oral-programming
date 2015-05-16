@@ -1,13 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ga.rugal</groupId>
-    <artifactId>command</artifactId>
+    <groupId>ml.rugal</groupId>
+    <artifactId>oral-programming</artifactId>
+    <name>Java oral programming toolkit</name>
+    <description>This is a Java based oral programming tool kit. Including google speech recognition, FLAC recorder, keyboard operator etc.,</description>
     <version>0.1</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+
+
+    <developers>
+        <developer>
+            <id>ryujin</id>
+            <name>Rugal Bernstein</name>
+            <email>rugal.bernstein.0@gmail.com</email>
+            <url>http://rugal.ga</url>
+        </developer>
+    </developers>
+
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    <modules>
+        <module>keyboard-operator</module>
+        <module>google-speech</module>
+        <module>flac-recorder</module>
+        <module>rugal-programming-robot</module>
+    </modules>
+    <dependencies>
+ 
+        <!-- Logging start -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <artifactId>slf4j-api</artifactId>
+            <groupId>org.slf4j</groupId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Log4j stop -->
+        <!-- Unit Test start -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hamcrest-core</artifactId>
+                    <groupId>org.hamcrest</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Unit Test stop -->
+    </dependencies>
 </project>

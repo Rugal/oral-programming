@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ga.rugal.command;
+package ml.rugal.command;
 
 import java.awt.AWTException;
 import java.awt.Frame;
