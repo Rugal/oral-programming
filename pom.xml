@@ -35,7 +35,11 @@
         <module>rugal-programming-robot</module>
     </modules>
     <dependencies>
- 
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.3.1</version>
+        </dependency>
         <!-- Logging start -->
         <dependency>
             <groupId>log4j</groupId>
