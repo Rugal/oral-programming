@@ -1,6 +1,5 @@
-package ml.rugal.speech.microphone;
+package ml.rugal.microphone;
 
-import ml.rugal.microphone.Microphone;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -9,6 +8,7 @@ import javax.sound.sampled.LineUnavailableException;
 import net.sourceforge.javaFlacEncoder.FLAC_FileEncoder;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -17,8 +17,6 @@ import org.junit.Test;
  */
 public class Wav2FlacConverterTest
 {
-
-    private final String apikey = "AIzaSyBqC4CJz7HcalA_2aP5bd_Ll8iyLbgxtJs";
 
     public Wav2FlacConverterTest()
     {
@@ -35,6 +33,7 @@ public class Wav2FlacConverterTest
     }
 
     @Test
+    @Ignore
     public void testExecute() throws IOException, LineUnavailableException, InterruptedException, URISyntaxException
     {
         System.out.println("execute");

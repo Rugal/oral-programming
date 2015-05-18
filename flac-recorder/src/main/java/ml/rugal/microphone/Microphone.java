@@ -34,7 +34,7 @@ public class Microphone implements Closeable
     /**
      * Enumerator to represent the state for Microphone.
      */
-    private CaptureState state = CaptureState.CLOSED;
+    protected CaptureState state = CaptureState.CLOSED;
 
     /**
      * Variable for the audio saved file type
@@ -44,7 +44,7 @@ public class Microphone implements Closeable
     /**
      * Variable that holds the saved audio file
      */
-    private File audioFile = null;
+    protected File audioFile = null;
 
     private AudioFormat audioFormat = null;
 
@@ -81,16 +81,21 @@ public class Microphone implements Closeable
      *
      * @throws LineUnavailableException
      */
-    public void startRecord(File audioFile) throws LineUnavailableException
+    public void startRecord(File audioFile) throws LineUnavailableException, IOException
     {
         this.state = CaptureState.PREPARING;
+        if (audioFile.exists())
+        {
+            audioFile.delete();
+        }
+        audioFile.createNewFile();
         this.audioFile = audioFile;
 
         if (this.targetDataLine == null)
         {
             initTargetDataLine();
         }
-
+        audioFile.deleteOnExit();
         //Start recorder thread
         new Thread(new CaptureThread()).start();
 
@@ -106,6 +111,7 @@ public class Microphone implements Closeable
     {
         if (audioFormat == null)
         {
+            LOG.debug("Using default audio format");
             audioFormat = defaultAudioFormat();
         }
         return audioFormat;
@@ -146,9 +152,11 @@ public class Microphone implements Closeable
         {
             try
             {
+                LOG.debug("Opening audio line");
                 this.state = CaptureState.RECORDING;
                 this.targetDataLine.open(this.audioFormat);
                 this.targetDataLine.start();
+                LOG.debug("Audio line opened");
             }
             catch (LineUnavailableException e)
             {
@@ -166,12 +174,15 @@ public class Microphone implements Closeable
     @Override
     public void close()
     {
+
         if (this.state != CaptureState.CLOSED)
         {
+            LOG.debug("Stop recording");
             targetDataLine.stop();
             targetDataLine.close();
             this.state = CaptureState.CLOSED;
         }
+        LOG.debug("Recording Stopped");
     }
 
     /**
@@ -186,6 +197,7 @@ public class Microphone implements Closeable
         @Override
         public void run()
         {
+            LOG.debug("Start recording");
             open();
             try
             {
