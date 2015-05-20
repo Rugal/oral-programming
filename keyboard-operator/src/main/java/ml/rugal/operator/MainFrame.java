@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ml.rugal.command;
+package ml.rugal.operator;
 
 import java.awt.AWTException;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
-import java.awt.Robot;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import ml.rugal.operator.commandSpec.Command;
 
 /**
  *
@@ -257,18 +257,17 @@ public class MainFrame extends javax.swing.JFrame
                 this.setState(Frame.ICONIFIED);
                 this.setVisible(false);
             }
-            Robot robot = new Robot();
-
-            Thread.sleep(1000);
-
-            for (Integer key : keys)
+            String[] text =
             {
-                robot.keyPress(key);
-                robot.keyPress(key);
-                Thread.sleep(800);
-            }
+                "Move", "UP", "3"
+            };
+            Thread.sleep(1000);
+            executor.execute(Command.verifyCommand(text));
+            this.setState(Frame.NORMAL);
+            this.setVisible(true);
+
         }
-        catch (AWTException | InterruptedException ex)
+        catch (AWTException | InterruptedException | ClassNotFoundException | InstantiationException | IllegalAccessException ex)
         {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -321,12 +320,9 @@ public class MainFrame extends javax.swing.JFrame
         /*
          * Create and display the form
          */
-        java.awt.EventQueue.invokeLater(new Runnable()
+        java.awt.EventQueue.invokeLater(() ->
         {
-            public void run()
-            {
-                new MainFrame().setVisible(true);
-            }
+            new MainFrame().setVisible(true);
         });
     }
 
@@ -348,7 +344,9 @@ public class MainFrame extends javax.swing.JFrame
 
     private SystemTray systemTray;
 
-    private TrayIcon trayIcon;
+    private final TrayIcon trayIcon;
 
     private final List<Integer> keys = new ArrayList<>();
+
+    private final CommandExecutor executor = new CommandExecutor();
 }
