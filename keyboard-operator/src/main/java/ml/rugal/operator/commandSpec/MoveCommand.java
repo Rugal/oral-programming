@@ -44,7 +44,7 @@ public class MoveCommand extends Command
     @Override
     public void executeCommand(Robot robot, List<Command> history)
     {
-        LOG.debug("Button pressing " + this.move.toString());
+        LOG.debug("Button pressing " + this.move.toString() + " " + step + " time(s)");
         for (int i = 0; i < step; i++)
         {
             robot.keyPress(this.move.getKeyEvent());

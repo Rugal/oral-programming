@@ -12,9 +12,10 @@ public abstract class Command
 
     public static Command verifyCommand(String[] textCommand) throws ClassNotFoundException, InstantiationException, IllegalAccessException
     {
-        Command command = (Command) Class.forName(Command.class.getName().replaceAll("Command", textCommand[0] + "Command")).newInstance();
+        String className = Command.class.getName().replaceAll("Command", textCommand[0] + "Command");
+        Command command = (Command) Class.forName(className).newInstance();
         //some internal verification must be done here
-        //method below will set some command specific parameters
+        //method below will initialize the command
         command.setOperation(textCommand);
         return command;
     }

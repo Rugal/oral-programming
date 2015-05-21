@@ -46,7 +46,5 @@ public class CommandExecutor
         //execute
         order.executeCommand(robot, history);
         history.add(order);
-
-//        Thread.sleep(1000);
     }
 }
