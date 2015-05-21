@@ -1,4 +1,4 @@
-package ga.rugal.integration;
+package ml.rugal.integration;
 
 import com.google.gson.Gson;
 import java.io.File;
