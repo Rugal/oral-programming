@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Command for move on screen.
  *
  * @author Rugal Bernstein
  */
@@ -28,14 +29,19 @@ public class MoveCommand extends Command
     {
     }
 
+    /**
+     * Here move command only allow several directions of move, this will affect
+     * behavior in motion. Moving steps is in third element if defined.
+     *
+     * @param textCommand
+     */
     @Override
-    public void setOperation(String[] textCommand)
+    public void init(String[] textCommand)
     {
-        this.move = Move.valueOf(textCommand[1]);
+        this.move = Move.valueOf(textCommand[1].toUpperCase());
         if (textCommand.length < 3)
         {
             LOG.debug("Less than 3 parameters");
-
             return;
         }
         this.step = Integer.parseInt(textCommand[2]);

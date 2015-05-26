@@ -4,25 +4,20 @@ import java.awt.Robot;
 import java.util.List;
 
 /**
+ * This is the abstract base for all Command in program.
+ * Best using the {@code CommandFactory} to instantiate a valid command instead
+ * of doing so by yourself.
  *
  * @author Rugal Bernstein
+ * @since 0.1
  */
 public abstract class Command
 {
 
-    public static Command verifyCommand(String[] textCommand) throws ClassNotFoundException, InstantiationException, IllegalAccessException
-    {
-        String className = Command.class.getName().replaceAll("Command", textCommand[0] + "Command");
-        Command command = (Command) Class.forName(className).newInstance();
-        //some internal verification must be done here
-        //method below will initialize the command
-        command.setOperation(textCommand);
-        return command;
-    }
-
+//    private static final Logger LOG = LoggerFactory.getLogger(Command.class.getName());
     protected String[] parameters = null;
 
-    public Command()
+    Command()
     {
     }
 
@@ -31,8 +26,26 @@ public abstract class Command
         return parameters;
     }
 
-    public abstract void setOperation(String[] textCommand);
+    /**
+     * This method used for initializing a command. Since different commands use
+     * different key words and parameter elements. Initialization in here so we
+     * could do any work in same code.
+     * This method must be implemented. Also must be well initialized to ensure
+     * the command will be executed correctly.
+     *
+     * @param textCommand Usually the first element is command key work, the
+     *                    rest of parameters are specific to different commands.
+     */
+    public abstract void init(String[] textCommand);
 
+    /**
+     * Command will be executed in real when invoking this method.
+     * history provided for reading historical command to do work like redo and
+     * undo.
+     *
+     * @param robot   A robot instance to execute in real.
+     * @param history a list of commands that have been executed.
+     */
     public abstract void executeCommand(final Robot robot, final List<Command> history);
 
 }
