@@ -9,8 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * This is the final command executor. Each command must be executed in here.
+ * This class not only provide stand execution robot but also have a command
+ * history to retrieve historical commands and parameters whenever needed.
  *
  * @author Rugal Bernstein
+ * @since 0.1
  */
 public class CommandExecutor
 {
@@ -27,7 +31,15 @@ public class CommandExecutor
 
     }
 
-    public void execute(Command order) throws AWTException, InterruptedException
+    /**
+     * Method to execute an command.
+     * Some command pre-check work such as privilege thing must be done in here.
+     *
+     * @param order
+     *
+     * @throws AWTException if robot can not be instantiated
+     */
+    public void execute(Command order) throws AWTException
     {
         if (null == robot)
         {
@@ -41,6 +53,7 @@ public class CommandExecutor
                 throw ex;
             }
         }
+        //TODO
         //verify command
         //LATER parse stage
         //execute

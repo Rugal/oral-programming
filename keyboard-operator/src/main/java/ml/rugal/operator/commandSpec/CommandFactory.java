@@ -20,6 +20,9 @@ public class CommandFactory
     /**
      * This static method used to create valid command from String[] by
      * validating and reflecting it.
+     * Some pre-check work such as validation and verification must be done
+     * here.
+     *
      *
      * @param textCommand this parameter is user specified. generally speaking
      *                    the first element of the string is the command key
@@ -37,10 +40,13 @@ public class CommandFactory
      */
     public static Command constructCommand(String[] textCommand) throws CommandNotFoundException, CommandInvalidException
     {
+        //These are several internal used only Command class to be reflected.
+        //I plan to use Spring to do IoC instead of doing so by adding class file to my package.
         String className = Command.class.getName().replaceAll("Command", textCommand[0] + "Command");
         Command command;
         try
         {
+            //TODO
             //some internal verification must be done here
             //method below will initialize the command
             command = (Command) Class.forName(className).newInstance();
@@ -49,7 +55,7 @@ public class CommandFactory
         }
         catch (ClassNotFoundException ex)
         {
-            LOG.error("The command word <" + textCommand[0] + "> is invalid, please check command table for correct spell");
+            LOG.error("The command word <" + textCommand[0] + "> is invalid, please check command word table for correct spell");
             throw new CommandNotFoundException(ex);
         }
         catch (InstantiationException | IllegalAccessException ex)
