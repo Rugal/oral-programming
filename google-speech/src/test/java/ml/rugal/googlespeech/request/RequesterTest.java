@@ -1,9 +1,8 @@
-package ga.rugal.googlespeech.request;
+package ml.rugal.googlespeech.request;
 
 import com.google.gson.Gson;
 import java.io.File;
 import ml.rugal.googlespeech.gson.SpeechResponseData;
-import ml.rugal.googlespeech.request.APIRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
