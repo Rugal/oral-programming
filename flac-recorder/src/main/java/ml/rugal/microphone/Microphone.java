@@ -80,6 +80,7 @@ public class Microphone implements Closeable
      * @param audioFile The File to save the audio to
      *
      * @throws LineUnavailableException
+     * @throws java.io.IOException
      */
     public void startRecord(File audioFile) throws LineUnavailableException, IOException
     {
@@ -124,7 +125,7 @@ public class Microphone implements Closeable
 
     private AudioFormat defaultAudioFormat()
     {
-        float sampleRate = 44100.0F;
+        float sampleRate = 44100F;
         //8000,11025,16000,22050,44100
         int sampleSizeInBits = 16;
         //8,16
