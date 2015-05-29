@@ -36,7 +36,8 @@ public class RequesterTest
     public void testExecute() throws Exception
     {
         System.out.println("execute");
-        File file = new File("E:\\Downloads\\good-morning-google.flac");
+//        File file = new File("E:\\Downloads\\move.flac");
+        File file = new File("test.flac");
         String prejson = requester.execute(file);
         String json = prejson.substring(prejson.indexOf("\n") + 1);
         SpeechResponseData ob = new Gson().fromJson(json, SpeechResponseData.class);

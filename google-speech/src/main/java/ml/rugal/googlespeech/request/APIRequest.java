@@ -62,7 +62,8 @@ public class APIRequest
     /**
      * Must be a FLAC file, not responsible for but recognition if otherwise.
      *
-     * @param file a valid FLAC file
+     * @param file   a valid FLAC file
+     * @param format
      *
      * @return return a JSON which google directly return for us.
      *
@@ -73,12 +74,12 @@ public class APIRequest
     {
 
         URI uri = new URIBuilder()
-                .setScheme("https")
-                .setHost("www.google.com")
-                .setPath("/speech-api/v2/recognize")
-                .setParameter("output", "json")
-                .setParameter("lang", this.lang)
-                .setParameter("key", this.apikey).build();
+            .setScheme("https")
+            .setHost("www.google.com")
+            .setPath("/speech-api/v2/recognize")
+            .setParameter("output", "json")
+            .setParameter("lang", this.lang)
+            .setParameter("key", this.apikey).build();
 
         //Multipart file
         MultipartEntity entity = new MultipartEntity();
@@ -87,7 +88,7 @@ public class APIRequest
         //http request
         HttpPost request = new HttpPost(uri);
         //content type = audio-flac
-        request.setHeader("Content-Type", "audio/x-flac; rate=44100");
+        request.setHeader("Content-Type", "audio/x-flac; rate=16000;");
         request.setEntity(entity);
         //use String handler
         ResponseHandler<String> handler = new BasicResponseHandler();
