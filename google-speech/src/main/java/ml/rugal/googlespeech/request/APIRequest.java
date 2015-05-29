@@ -60,10 +60,12 @@ public class APIRequest
     }
 
     /**
-     * Must be a FLAC file, not responsible for but recognition if otherwise.
+     * Must be a FLAC file, not responsible for correct recognition if
+     * otherwise.
+     * //TODO consider to add another parameter to indicate audio format
      *
-     * @param file   a valid FLAC file
-     * @param format
+     * @param file a valid FLAC file
+     *
      *
      * @return return a JSON which google directly return for us.
      *
@@ -72,7 +74,6 @@ public class APIRequest
      */
     public String execute(File file) throws URISyntaxException, IOException
     {
-
         URI uri = new URIBuilder()
             .setScheme("https")
             .setHost("www.google.com")
@@ -87,7 +88,8 @@ public class APIRequest
 
         //http request
         HttpPost request = new HttpPost(uri);
-        //content type = audio-flac
+        //content type = audio-flac with sample rate 16000
+        //TODO this sample rate need to use audio format variable
         request.setHeader("Content-Type", "audio/x-flac; rate=16000;");
         request.setEntity(entity);
         //use String handler
