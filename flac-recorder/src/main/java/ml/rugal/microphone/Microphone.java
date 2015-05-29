@@ -96,7 +96,7 @@ public class Microphone implements Closeable
         {
             initTargetDataLine();
         }
-        audioFile.deleteOnExit();
+//        audioFile.deleteOnExit();
         //Start recorder thread
         new Thread(new CaptureThread()).start();
 
@@ -125,7 +125,7 @@ public class Microphone implements Closeable
 
     private AudioFormat defaultAudioFormat()
     {
-        float sampleRate = 44100F;
+        float sampleRate = 16000;
         //8000,11025,16000,22050,44100
         int sampleSizeInBits = 16;
         //8,16

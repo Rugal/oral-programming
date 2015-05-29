@@ -52,8 +52,8 @@ public class FlacMicrophoneTest
             microphone.close();
             System.out.println("Stop");
             File out = microphone.getFlacFile();
-            file.deleteOnExit();
-            out.deleteOnExit();
+//            file.deleteOnExit();
+//            out.deleteOnExit();
         }
     }
 
