@@ -1,6 +1,8 @@
 #Google Speech API
-For now only FLAC and 441000 sampling rate is allow.  don't know what else google allowed.  
+Google allow WAV and FLAC format with different sample rate, don't know what else google allowed.  
+After several times of experiments, I found FLAC with sample rate=16000 in 16 bits is good and fast enough. This is what I am using in google speech API now.  
 Only recording audio is allowed, but I plan to use Google Full Duplex, which means I need to implement streaming recording. I got no idea about this technique.  
+
 
 
 ##Usage
