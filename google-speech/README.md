@@ -1,14 +1,14 @@
 #Google Speech API
 Google allow WAV and FLAC format with different sample rate, don't know what else google allowed.  
-After several times of experiments, I found FLAC with sample rate=16000 in 16 bits is good and fast enough. This is what I am using in google speech API now.  
-Only recording audio is allowed, but I plan to use Google Full Duplex, which means I need to implement streaming recording. I got no idea about this technique.  
+After several times of experiments, I found FLAC with sample `rate=16000` in `16 bits` is good and fast enough. This is what I am using in google speech API now.  
+Only recording audio is allowed for now, but I plan to use Google Full Duplex, which means I need to implement streaming recording. I got no idea about this technique.  
 
 
 
 ##Usage
-Please refer to the [test case](https://github.com/Rugal/oral-programming/blob/master/google-speech/src/test/java/ga/rugal/googlespeech/request/RequesterTest.java#L37) I am doing.  
-Notice google will throw `2` json back, so you need to handle this by yourself.  
-I don't know when will google change the format, but I wish them do not to change.  
+Please refer to the [test case](https://github.com/Rugal/oral-programming/blob/master/google-speech/src/test/java/ml/rugal/googlespeech/request/RequesterTest.java#L36) I am doing.  
+Notice google will throw `2` json back, the first with empty body is to confirm succeed of request. So you need to handle this by yourself.  
+I don't know when will google change the format, but I wish it stay the same.  
 
 
 ##language support
