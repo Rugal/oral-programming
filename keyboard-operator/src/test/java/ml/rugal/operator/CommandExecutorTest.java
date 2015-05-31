@@ -4,6 +4,7 @@ import ml.rugal.operator.commandSpec.Command;
 import ml.rugal.operator.commandSpec.CommandFactory;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -28,7 +29,7 @@ public class CommandExecutorTest
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void testExecute() throws Exception
     {
         System.out.println("execute");
