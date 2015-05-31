@@ -8,6 +8,15 @@ package ml.rugal.operator.exception;
 public class CommandNotFoundException extends Exception
 {
 
+    public CommandNotFoundException()
+    {
+    }
+
+    public CommandNotFoundException(String string)
+    {
+        super(string);
+    }
+
     public CommandNotFoundException(Throwable thrwbl)
     {
         super(thrwbl);

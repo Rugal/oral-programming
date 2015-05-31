@@ -13,8 +13,8 @@ import java.util.List;
  */
 public abstract class Command
 {
-
 //    private static final Logger LOG = LoggerFactory.getLogger(Command.class.getName());
+
     protected String[] parameters = null;
 
     Command()
@@ -47,5 +47,4 @@ public abstract class Command
      * @param history a list of commands that have been executed.
      */
     public abstract void executeCommand(final Robot robot, final List<Command> history);
-
 }

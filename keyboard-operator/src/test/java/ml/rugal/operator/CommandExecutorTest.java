@@ -28,6 +28,7 @@ public class CommandExecutorTest
     }
 
     @Test
+//    @Ignore
     public void testExecute() throws Exception
     {
         System.out.println("execute");

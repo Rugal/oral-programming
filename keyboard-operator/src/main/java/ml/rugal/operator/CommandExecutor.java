@@ -53,11 +53,12 @@ public class CommandExecutor
                 throw ex;
             }
         }
-        //TODO
-        //verify command
+        //TODO verify command
         //LATER parse stage
         //execute
+        LOG.debug("Going to execute command: " + order.getClass().getSimpleName());
         order.executeCommand(robot, history);
+        LOG.debug("Command: " + order.getClass().getSimpleName() + " executed successfully");
         history.add(order);
     }
 }

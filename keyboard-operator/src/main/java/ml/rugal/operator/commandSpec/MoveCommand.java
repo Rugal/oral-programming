@@ -14,6 +14,11 @@ import org.slf4j.LoggerFactory;
 public class MoveCommand extends Command
 {
 
+    public static String[] COMMAND_MAP =
+    {
+        "move", "go", "goto"
+    };
+
     private static final Logger LOG = LoggerFactory.getLogger(MoveCommand.class.getName());
 
     private Move move;
