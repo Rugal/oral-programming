@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
  * Command for move on screen.<BR/>
  * Format below are allowed:<BR/>
  * 1. &lt; key-word &gt; direction [step]<BR/>
- * 2. direction [step]<BR/>
+ * 2. go to direction [step]
+ * 3. direction [step]<BR/>
  *
  * @author Rugal Bernstein
  * @since 0.1
@@ -18,9 +19,17 @@ import org.slf4j.LoggerFactory;
 public class MoveCommand extends Command
 {
 
+    private static final String GO = "go";
+
+    private static final String MOVE = "move";
+
+    private static final String GOTO = "goto";
+
+    private static final String TO = "to";
+
     public static String[] COMMAND_MAP =
     {
-        "move", "go", "goto"
+        GO, MOVE, GOTO
     };
 
     private static final Logger LOG = LoggerFactory.getLogger(MoveCommand.class.getName());
@@ -51,6 +60,11 @@ public class MoveCommand extends Command
         if (isKeyWord(textCommand[0]))
         {
             directionIndex = 1;
+            //This if statement is for case. 2
+            if (textCommand[0].equalsIgnoreCase(GO) && textCommand[1].equalsIgnoreCase(TO))
+            {
+                directionIndex = 2;
+            }
         }
 
         this.direction = Move.valueOf(textCommand[directionIndex].toUpperCase());
@@ -59,8 +73,9 @@ public class MoveCommand extends Command
             LOG.debug("No step parameter, using default step length: " + this.step);
             return;
         }
-        //What if it is English word?
-        //TODO parse English word number to digit number
+        //TODO What if it is English word?
+        //But I find google speech API could convert number word to digit number automatically in most of the case,
+        //thus here I do not need to do the convertion myself.
         this.step = Integer.parseInt(textCommand[directionIndex + 1]);
     }
 
