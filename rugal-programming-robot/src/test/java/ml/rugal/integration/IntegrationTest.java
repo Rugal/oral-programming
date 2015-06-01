@@ -16,6 +16,7 @@ import ml.rugal.operator.exception.CommandInvalidException;
 import ml.rugal.operator.exception.CommandNotFoundException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -44,7 +45,7 @@ public class IntegrationTest
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void testExecute() throws IOException, LineUnavailableException, InterruptedException, URISyntaxException, CommandNotFoundException, CommandInvalidException, AWTException
     {
         System.out.println("execute");
@@ -62,7 +63,7 @@ public class IntegrationTest
             String prejson = request.execute(out);
             String json = prejson.substring(prejson.indexOf("\n") + 1);
             SpeechResponseData ob = new Gson().fromJson(json, SpeechResponseData.class);
-            System.out.println(ob.result[0].alternative[0].transcript);
+//            System.out.println(ob.result[0].alternative[0].transcript);
             Command cmd = CommandFactory.constructCommand(ob.result[0].alternative[0].transcript.split(" "));
             executor.execute(cmd);
             file.deleteOnExit();

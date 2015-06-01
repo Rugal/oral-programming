@@ -5,8 +5,8 @@ package ml.rugal.robot;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.google.gson.Gson;
 import java.awt.AWTException;
-import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -15,14 +15,21 @@ import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
+import ml.rugal.googlespeech.gson.SpeechResponseData;
+import ml.rugal.googlespeech.request.APIRequest;
+import ml.rugal.microphone.FlacMicrophone;
 import ml.rugal.operator.CommandExecutor;
 import ml.rugal.operator.commandSpec.Command;
+import ml.rugal.operator.commandSpec.CommandFactory;
+import ml.rugal.operator.exception.CommandInvalidException;
+import ml.rugal.operator.exception.CommandNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,58 +98,31 @@ public class MainFrame extends javax.swing.JFrame
     private void initComponents()
     {
 
-        controlPanel = new javax.swing.JPanel();
-        upButton = new javax.swing.JButton();
-        downButton = new javax.swing.JButton();
-        leftButton = new javax.swing.JButton();
-        rightButton = new javax.swing.JButton();
-        clearButton = new javax.swing.JButton();
-        executeButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
+        startButton = new javax.swing.JButton();
+        clearButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAlwaysOnTop(true);
         setFocusable(false);
         setResizable(false);
         setState(1);
 
-        upButton.setText("Up");
-        upButton.setFocusable(false);
-        upButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                upButtonActionPerformed(evt);
-            }
-        });
+        textArea.setEditable(false);
+        textArea.setColumns(20);
+        textArea.setFont(new java.awt.Font("HeyMona", 0, 11)); // NOI18N
+        textArea.setRows(5);
+        textArea.setFocusable(false);
+        jScrollPane1.setViewportView(textArea);
 
-        downButton.setText("Down");
-        downButton.setFocusable(false);
-        downButton.addActionListener(new java.awt.event.ActionListener()
+        startButton.setText("Start");
+        startButton.setFocusable(false);
+        startButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                downButtonActionPerformed(evt);
-            }
-        });
-
-        leftButton.setText("Left");
-        leftButton.setFocusable(false);
-        leftButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                leftButtonActionPerformed(evt);
-            }
-        });
-
-        rightButton.setText("Right");
-        rightButton.setFocusable(false);
-        rightButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                rightButtonActionPerformed(evt);
+                startButtonActionPerformed(evt);
             }
         });
 
@@ -156,75 +136,30 @@ public class MainFrame extends javax.swing.JFrame
             }
         });
 
-        executeButton.setText("Execute");
-        executeButton.setFocusable(false);
-        executeButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                executeButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
-        controlPanel.setLayout(controlPanelLayout);
-        controlPanelLayout.setHorizontalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, controlPanelLayout.createSequentialGroup()
-                .addComponent(leftButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(upButton)
-                    .addComponent(downButton)
-                    .addComponent(clearButton)
-                    .addComponent(executeButton))
-                .addGap(1, 1, 1)
-                .addComponent(rightButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        controlPanelLayout.setVerticalGroup(
-            controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(controlPanelLayout.createSequentialGroup()
-                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(controlPanelLayout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rightButton)
-                            .addComponent(leftButton)))
-                    .addGroup(controlPanelLayout.createSequentialGroup()
-                        .addComponent(upButton)
-                        .addGap(66, 66, 66)
-                        .addComponent(downButton, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(36, 36, 36)
-                .addComponent(executeButton)
-                .addGap(27, 27, 27)
-                .addComponent(clearButton)
-                .addContainerGap(43, Short.MAX_VALUE))
-        );
-
-        textArea.setColumns(20);
-        textArea.setFont(new java.awt.Font("HeyMona", 0, 11)); // NOI18N
-        textArea.setRows(5);
-        textArea.setFocusable(false);
-        jScrollPane1.setViewportView(textArea);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(startButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
+                .addComponent(clearButton)
+                .addGap(52, 52, 52))
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
 
@@ -234,56 +169,33 @@ public class MainFrame extends javax.swing.JFrame
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_clearButtonActionPerformed
     {//GEN-HEADEREND:event_clearButtonActionPerformed
         textArea.setText("");
-        keys.clear();
     }//GEN-LAST:event_clearButtonActionPerformed
 
-    private void upButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_upButtonActionPerformed
-    {//GEN-HEADEREND:event_upButtonActionPerformed
-        textArea.append("UP\n");
-        keys.add(KeyEvent.VK_UP);
-    }//GEN-LAST:event_upButtonActionPerformed
-
-    private void downButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_downButtonActionPerformed
-    {//GEN-HEADEREND:event_downButtonActionPerformed
-        textArea.append("DOWN\n");
-        keys.add(KeyEvent.VK_DOWN);
-    }//GEN-LAST:event_downButtonActionPerformed
-
-    private void leftButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_leftButtonActionPerformed
-    {//GEN-HEADEREND:event_leftButtonActionPerformed
-        textArea.append("LEFT\n");
-        keys.add(KeyEvent.VK_LEFT);
-    }//GEN-LAST:event_leftButtonActionPerformed
-
-    private void rightButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_rightButtonActionPerformed
-    {//GEN-HEADEREND:event_rightButtonActionPerformed
-        textArea.append("RIGHT\n");
-        keys.add(KeyEvent.VK_RIGHT);
-    }//GEN-LAST:event_rightButtonActionPerformed
-
-    private void executeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_executeButtonActionPerformed
-    {//GEN-HEADEREND:event_executeButtonActionPerformed
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_startButtonActionPerformed
+    {//GEN-HEADEREND:event_startButtonActionPerformed
+        File audio = new File("temp.wav");
+        startButton.setText("Recording");
         try
         {
-            this.setState(Frame.ICONIFIED);
-            this.setVisible(false);
-            //Text input
-            String[] text =
-            {
-                "Move", "UP", "3"
-            };
-            //wait until window minimized
-            Thread.sleep(1000);
-            executor.execute(Command.verifyCommand(text));
-            this.setVisible(true);
-            this.setExtendedState(JFrame.NORMAL);
 
+            microphone.startRecord(audio);
+            Thread.sleep(4000);
+            microphone.close();
+
+            String prejson = request.execute(microphone.getFlacFile());
+            String json = prejson.substring(prejson.indexOf("\n") + 1);
+            SpeechResponseData ob = gson.fromJson(json, SpeechResponseData.class);
+            Command cmd = CommandFactory.constructCommand(ob.result[0].alternative[0].transcript.split(" "));
+            executor.execute(cmd);
+            textArea.append(ob.result[0].alternative[0].transcript);
+            textArea.append("\n");
         }
-        catch (AWTException | InterruptedException | ClassNotFoundException | InstantiationException | IllegalAccessException ex)
+        catch (InterruptedException | CommandInvalidException | CommandNotFoundException | LineUnavailableException | IOException | URISyntaxException | AWTException ex)
         {
             LOG.error("Error while executing command", ex);
         }
-    }//GEN-LAST:event_executeButtonActionPerformed
+        startButton.setText("Start");
+    }//GEN-LAST:event_startButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -330,14 +242,9 @@ public class MainFrame extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearButton;
-    private javax.swing.JPanel controlPanel;
-    private javax.swing.JButton downButton;
-    private javax.swing.JButton executeButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton leftButton;
-    private javax.swing.JButton rightButton;
+    private javax.swing.JButton startButton;
     private javax.swing.JTextArea textArea;
-    private javax.swing.JButton upButton;
     // End of variables declaration//GEN-END:variables
 
     private PopupMenu trayPopup = new PopupMenu();
@@ -348,7 +255,13 @@ public class MainFrame extends javax.swing.JFrame
 
     private TrayIcon trayIcon = null;
 
-    private final List<Integer> keys = new ArrayList<>();
-
     private final CommandExecutor executor = new CommandExecutor();
+
+    private FlacMicrophone microphone = new FlacMicrophone();
+
+    private final String apikey = "AIzaSyBqC4CJz7HcalA_2aP5bd_Ll8iyLbgxtJs";
+
+    private final APIRequest request = new APIRequest(apikey);
+
+    private Gson gson = new Gson();
 }
