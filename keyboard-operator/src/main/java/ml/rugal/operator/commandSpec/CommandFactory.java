@@ -68,6 +68,7 @@ public class CommandFactory
             Class<? extends Command> clazz = commandMap.get(commandText);
             Command command = clazz.newInstance();
             LOG.debug("Command " + clazz.getSimpleName() + " with key word <" + commandText + "> is received");
+            LOG.debug(parameterLog(textCommand));
             //TODO some internal verification must be done here
             //method below will initialize the command
             command.init(textCommand);
@@ -84,6 +85,23 @@ public class CommandFactory
             LOG.error("Unable to instantiate this command: " + commandText + "Command", ex);
             throw new CommandInvalidException(ex);
         }
+    }
+
+    /**
+     * Just for clear code
+     * <p>
+     * @param textCommand
+     *                    <p>
+     * @return
+     */
+    private static String parameterLog(String[] textCommand)
+    {
+        StringBuilder sb = new StringBuilder("Parameter includes:");
+        for (String text : textCommand)
+        {
+            sb.append("\n").append("   ").append(text);
+        }
+        return sb.toString();
     }
 
     private CommandFactory()

@@ -21,6 +21,8 @@ public class MoveCommand extends Command
 
     private static final String GO = "go";
 
+    private static final String GOLF = "golf";
+
     private static final String MOVE = "move";
 
     private static final String GOTO = "goto";
@@ -29,7 +31,7 @@ public class MoveCommand extends Command
 
     public static String[] COMMAND_MAP =
     {
-        GO, MOVE, GOTO
+        GO, MOVE, GOTO, GOLF
     };
 
     private static final Logger LOG = LoggerFactory.getLogger(MoveCommand.class.getName());
@@ -110,7 +112,14 @@ public class MoveCommand extends Command
     public enum Move
     {
 
-        UP(KeyEvent.VK_UP), DOWN(KeyEvent.VK_DOWN), LEFT(KeyEvent.VK_LEFT), RIGHT(KeyEvent.VK_RIGHT);
+        //UP
+        UP(KeyEvent.VK_UP), AT(KeyEvent.VK_UP), ART(KeyEvent.VK_UP),
+        //DOWN
+        DOWN(KeyEvent.VK_DOWN), DONE(KeyEvent.VK_DOWN),
+        //LEFT
+        LEFT(KeyEvent.VK_LEFT), LOFT(KeyEvent.VK_LEFT), LIVE(KeyEvent.VK_LEFT), LEAVE(KeyEvent.VK_LEFT),
+        //RIGHT
+        RIGHT(KeyEvent.VK_RIGHT), WRITE(KeyEvent.VK_RIGHT), WRIGHT(KeyEvent.VK_RIGHT), WHITE(KeyEvent.VK_RIGHT),;
 
         private final int keyEvent;
 
