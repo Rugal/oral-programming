@@ -21,7 +21,23 @@ public class MoveCommand extends Command
 
     private static final String GO = "go";
 
+    private static final String G2 = "02";
+
+    private static final String GHOST = "ghost";
+
+    private static final String GOLDEN = "golden";
+
+    private static final String DOG = "dog";
+
+    private static final String BOW = "bow";
+
+    private static final String CALL = "call";
+
     private static final String GOLF = "golf";
+
+    private static final String BOOST = "boost";
+
+    private static final String OOVOO = "oovoo";
 
     private static final String MOVE = "move";
 
@@ -39,15 +55,17 @@ public class MoveCommand extends Command
 
     private static final String MOVIE = "movie";
 
+    private static final String WOLF = "wolf";
+
     public static String[] COMMAND_MAP =
     {
 
         //GO
-        GO, GOLF, GOOF,
-        //MOVE
-        MOVE, WHO, BOOB, MOVIE, UV,
+        GO, GOLF, GOOF, CALL, DOG, BOW, GOLDEN, GHOST,
+        //MOVEG2,
+        MOVE, WHO, BOOB, MOVIE, UV, BOOST, OOVOO, WOLF,
         //GOTO
-        GOTO
+        G2, GOTO
     };
 
     private static final Logger LOG = LoggerFactory.getLogger(MoveCommand.class
@@ -130,11 +148,11 @@ public class MoveCommand extends Command
     {
 
         //UP
-        UP(KeyEvent.VK_UP), AT(KeyEvent.VK_UP), ART(KeyEvent.VK_UP), OFF(KeyEvent.VK_UP), APP(KeyEvent.VK_UP),
+        UP(KeyEvent.VK_UP), AT(KeyEvent.VK_UP), ART(KeyEvent.VK_UP), OFF(KeyEvent.VK_UP), OF(KeyEvent.VK_UP), APP(KeyEvent.VK_UP), FUCK(KeyEvent.VK_UP), BAT(KeyEvent.VK_UP), OP(KeyEvent.VK_UP),
         //DOWN
-        DOWN(KeyEvent.VK_DOWN), DONE(KeyEvent.VK_DOWN),
+        DOWN(KeyEvent.VK_DOWN), DONE(KeyEvent.VK_DOWN), BANK(KeyEvent.VK_DOWN),
         //LEFT
-        LEFT(KeyEvent.VK_LEFT), LOFT(KeyEvent.VK_LEFT), LIVE(KeyEvent.VK_LEFT), LEAVE(KeyEvent.VK_LEFT),
+        LEFT(KeyEvent.VK_LEFT), LOFT(KeyEvent.VK_LEFT), LIVE(KeyEvent.VK_LEFT), LEAVE(KeyEvent.VK_LEFT), LAST(KeyEvent.VK_LEFT), LAUGH(KeyEvent.VK_LEFT),
         //RIGHT
         RIGHT(KeyEvent.VK_RIGHT), LIGHT(KeyEvent.VK_RIGHT), WRITE(KeyEvent.VK_RIGHT), WRIGHT(KeyEvent.VK_RIGHT), WHITE(KeyEvent.VK_RIGHT),;
 
