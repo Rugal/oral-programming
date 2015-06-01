@@ -29,12 +29,25 @@ public class MoveCommand extends Command
 
     private static final String TO = "to";
 
+    private static final String WHO = "who";
+
+    private static final String BOOB = "boob";
+
+    private static final String GOOF = "goof";
+
     public static String[] COMMAND_MAP =
     {
-        GO, MOVE, GOTO, GOLF
+
+        //GO
+        GO, GOLF, GOOF,
+        //MOVE
+        MOVE, WHO, BOOB,
+        //GOTO
+        GOTO
     };
 
-    private static final Logger LOG = LoggerFactory.getLogger(MoveCommand.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(MoveCommand.class
+        .getName());
 
     private Move direction;
 
@@ -88,7 +101,7 @@ public class MoveCommand extends Command
     @Override
     public void executeCommand(Robot robot, List<Command> history)
     {
-        LOG.debug("Button pressing " + this.direction.toString() + " " + step + " time(s)");
+        LOG.debug("Button pressing " + KeyEvent.getKeyText(this.direction.getKeyEvent()) + " " + step + " time(s)");
         for (int i = 0; i < step; i++)
         {
             robot.keyPress(this.direction.getKeyEvent());
@@ -113,7 +126,7 @@ public class MoveCommand extends Command
     {
 
         //UP
-        UP(KeyEvent.VK_UP), AT(KeyEvent.VK_UP), ART(KeyEvent.VK_UP),
+        UP(KeyEvent.VK_UP), AT(KeyEvent.VK_UP), ART(KeyEvent.VK_UP), OFF(KeyEvent.VK_UP), APP(KeyEvent.VK_UP),
         //DOWN
         DOWN(KeyEvent.VK_DOWN), DONE(KeyEvent.VK_DOWN),
         //LEFT
