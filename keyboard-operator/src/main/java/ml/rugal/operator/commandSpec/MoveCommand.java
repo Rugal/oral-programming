@@ -35,13 +35,17 @@ public class MoveCommand extends Command
 
     private static final String GOOF = "goof";
 
+    private static final String UV = "uv";
+
+    private static final String MOVIE = "movie";
+
     public static String[] COMMAND_MAP =
     {
 
         //GO
         GO, GOLF, GOOF,
         //MOVE
-        MOVE, WHO, BOOB,
+        MOVE, WHO, BOOB, MOVIE, UV,
         //GOTO
         GOTO
     };
@@ -132,7 +136,7 @@ public class MoveCommand extends Command
         //LEFT
         LEFT(KeyEvent.VK_LEFT), LOFT(KeyEvent.VK_LEFT), LIVE(KeyEvent.VK_LEFT), LEAVE(KeyEvent.VK_LEFT),
         //RIGHT
-        RIGHT(KeyEvent.VK_RIGHT), WRITE(KeyEvent.VK_RIGHT), WRIGHT(KeyEvent.VK_RIGHT), WHITE(KeyEvent.VK_RIGHT),;
+        RIGHT(KeyEvent.VK_RIGHT), LIGHT(KeyEvent.VK_RIGHT), WRITE(KeyEvent.VK_RIGHT), WRIGHT(KeyEvent.VK_RIGHT), WHITE(KeyEvent.VK_RIGHT),;
 
         private final int keyEvent;
 
