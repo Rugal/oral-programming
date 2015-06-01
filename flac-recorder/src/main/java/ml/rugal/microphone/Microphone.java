@@ -123,6 +123,12 @@ public class Microphone implements Closeable
         this.audioFormat = audioFormat;
     }
 
+    /**
+     * The default audio format using specified parameters.
+     * Using sample rate 16000, 16 bits, mono, signed, little endian.
+     *
+     * @return
+     */
     private AudioFormat defaultAudioFormat()
     {
         float sampleRate = 16000;
