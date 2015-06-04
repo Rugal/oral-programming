@@ -1,4 +1,4 @@
-package ml.rugal.microphone;
+package ml.rugal.recorder.microphone;
 
 /**
  *

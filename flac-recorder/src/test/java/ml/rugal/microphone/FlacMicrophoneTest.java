@@ -1,5 +1,6 @@
 package ml.rugal.microphone;
 
+import ml.rugal.recorder.microphone.Microphone;
 import java.io.IOException;
 import java.util.Map;
 import javax.sound.sampled.AudioFormat;
