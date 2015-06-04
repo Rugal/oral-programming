@@ -3,6 +3,7 @@ package ml.rugal.googlespeech.request;
 import com.google.gson.Gson;
 import java.io.File;
 import javax.sound.sampled.AudioFormat;
+import ml.rugal.googlespeech.SpeechApiKey;
 import ml.rugal.googlespeech.gson.SpeechResponseData;
 import org.junit.After;
 import org.junit.Before;
@@ -16,9 +17,7 @@ import org.junit.Test;
 public class APIRequesterTest
 {
 
-    private final String apikey = "AIzaSyBqC4CJz7HcalA_2aP5bd_Ll8iyLbgxtJs";
-
-    private final APIRequest requester = new APIRequest(apikey);
+    private final APIRequest requester = new APIRequest(SpeechApiKey.key);
 
     public APIRequesterTest()
     {
