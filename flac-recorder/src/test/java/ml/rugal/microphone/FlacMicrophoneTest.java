@@ -37,7 +37,7 @@ public class FlacMicrophoneTest
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void testGetFlacFile() throws LineUnavailableException, IOException, InterruptedException
     {
         System.out.println("getFlacFile");

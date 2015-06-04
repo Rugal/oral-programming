@@ -42,12 +42,12 @@ public class Microphone
     /**
      * Interval between valid audio data(ms)
      */
-    public final long WORD_GAPS = 1500;
+    public final long WORD_GAPS_DURATION = 2000;
 
     /**
      * Minimum volume, ignore if lower than this value
      */
-    public final int AUDIO_LEVEL_MIN = 8;
+    public final int AUDIO_LEVEL_MIN = 10;
 
     /**
      * TargetDataLine variable to store audio data from microphone.
@@ -176,10 +176,10 @@ public class Microphone
     {
 
         //start point of valid audio data
-        private long start = -1;
+        private long startPoint = -1;
 
         //start point of invalid audio data
-        private long gap = -1;
+        private long gapPoint = -1;
 
         @Override
         public void run()
@@ -192,89 +192,78 @@ public class Microphone
             int numBytesRead;
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-
             try
             {
+                //apply for audio resource from OS
                 targetDataLine.open(audioFormat);
+                //start read buffer from I/O
                 targetDataLine.start();
             }
             catch (LineUnavailableException e)
             {
-
+                LOG.error("Unable to obtain required resources and start data line.");
+                LOG.warn("Force to stop recording");
+                close();
             }
-
-            //if everything ok!
-            //start recording here
-            while (state.equals(CaptureState.RECORDING))
+            while (state == CaptureState.RECORDING)
             {
+                //read data from data line
                 numBytesRead = targetDataLine.read(bytes, 0, bytes.length);
-                //if unable to read any byte from data line, something goes wrong
                 if (numBytesRead == -1)
                 {
+                    //if unable to read any byte from data line, something goes wrong
                     //stop work
+                    close();
                     break;
                 }
-
                 /**
                  * Compute volume in this audio byte data
                  */
                 int level = (int) (Microphone.calculateLevel(bytes, 0, 0, audioFormat) * 100);
                 LOG.info("" + level);
-
-                long cur = System.currentTimeMillis();
-
+                long currentTime = System.currentTimeMillis();
                 //ignore unhearable audio
                 if (level > AUDIO_LEVEL_MIN)
                 {
                     //So this loop guarantee to have audio data
-                    gap = -1;
-                    if (start == -1)
+                    gapPoint = -1;
+                    if (startPoint == -1)
                     {
-                        start = cur;
+                        startPoint = currentTime;
                         out = new ByteArrayOutputStream();
                     }
-
                     try
                     {
-                        //write audio data into byte array
                         out.write(bytes);
+                        LOG.debug("Write " + numBytesRead + " byte into buffer stream");
                     }
                     catch (IOException e)
                     {
-                        e.printStackTrace();
+                        LOG.error("Unable to write data into out stream");
                     }
-
                 }
                 else
                 {
                     //if audio output stream contain valid audio data
                     //this is the time to send it out
-                    if (start != -1)
+                    if (startPoint != -1)
                     {
                         //if the right last loop contain valid audio data
-                        if (gap == -1)
+                        if (gapPoint == -1)
                         {
-                            gap = cur;
+                            gapPoint = currentTime;
                         }
-                        //send to google API if silent time lasts for a predefined GAP long
-                        if (cur - gap > WORD_GAPS)
-                        {
-                            System.out.println("长度：" + (cur - start));
-                            start = -1;
-                            gap = -1;
-
+                        if (currentTime - gapPoint > WORD_GAPS_DURATION)
+                        {//send to google API iff silent time lasts for a predefined GAP long
+                            LOG.debug("Clip length：" + (currentTime - startPoint));
+                            startPoint = -1;
+                            gapPoint = -1;
                             byte[] byteArray = out.toByteArray();
-
                             AudioInputStream audioInputStream
                                 = new AudioInputStream(new ByteArrayInputStream(byteArray),
                                                        audioFormat,
                                                        byteArray.length / audioFormat.getFrameSize());
-
-                            //Send file to google API
-//                            if (clipListener != null)
-//                            {
-//                                clipListener.captureClip(audioInputStream);
-//                            }
+                            //TODO Send file to google API
                         }
                     }
                 }
@@ -331,7 +320,7 @@ public class Microphone
             // 8 bit - no endianness issues, just sign
             for (int i = readPoint; i < buffer.length - leftOver; i++)
             {
-                int value = 0;
+                int value;
                 if (signed)
                 {
                     value = buffer[i];
