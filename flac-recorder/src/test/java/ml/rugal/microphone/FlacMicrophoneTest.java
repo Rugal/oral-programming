@@ -1,6 +1,5 @@
 package ml.rugal.microphone;
 
-import ml.rugal.recorder.microphone.Microphone;
 import java.io.IOException;
 import java.util.Map;
 import javax.sound.sampled.AudioFormat;
@@ -9,6 +8,7 @@ import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
+import ml.rugal.recorder.microphone.Microphone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;

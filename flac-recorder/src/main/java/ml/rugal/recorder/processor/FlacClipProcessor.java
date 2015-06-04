@@ -5,7 +5,9 @@
  */
 package ml.rugal.recorder.processor;
 
+import java.io.ByteArrayOutputStream;
 import javax.sound.sampled.AudioInputStream;
+import ml.rugal.recorder.flac.FlacStreamConverter;
 
 /**
  *
@@ -17,7 +19,9 @@ public class FlacClipProcessor extends ClipProcessor
     @Override
     public void process(AudioInputStream ais)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ByteArrayOutputStream flacOS = FlacStreamConverter.convert(ais);
+
+        //TODO then our work is to use the converted flac stream to do some work
     }
 
 }
