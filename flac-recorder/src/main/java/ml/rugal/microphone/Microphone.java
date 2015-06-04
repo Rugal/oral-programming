@@ -1,9 +1,8 @@
 package ml.rugal.microphone;
 
-import java.io.Closeable;
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -18,13 +17,37 @@ import org.slf4j.LoggerFactory;
  * Microphone class that contains methods to capture audio from microphone.
  * Credit to Original author Luke Kuza, Aaron
  * Gokaslan(https://github.com/lkuza2/java-speech-api).
+ * <p>
+ * Thanks to gearcode https://github.com/gearcode/speech-to-text, his work is
+ * great!
  *
- * @author Luke Kuza, Aaron Gokaslan, Rugal Bernstein
+ * @author Luke Kuza, Aaron Gokaslan, gearcode, Rugal Bernstein
  */
-public class Microphone implements Closeable
+public class Microphone
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(Microphone.class.getName());
+
+    /**
+     * Some value for computing volume
+     */
+    public static final float MAX_8_BITS_SIGNED = Byte.MAX_VALUE;
+
+    public static final float MAX_8_BITS_UNSIGNED = 0xff;
+
+    public static final float MAX_16_BITS_SIGNED = Short.MAX_VALUE;
+
+    public static final float MAX_16_BITS_UNSIGNED = 0xffff;
+
+    /**
+     * Interval between valid audio data(ms)
+     */
+    public final long WORD_GAPS = 1500;
+
+    /**
+     * Minimum volume, ignore if lower than this value
+     */
+    public final int AUDIO_LEVEL_MIN = 8;
 
     /**
      * TargetDataLine variable to store audio data from microphone.
@@ -36,70 +59,10 @@ public class Microphone implements Closeable
      */
     protected CaptureState state = CaptureState.CLOSED;
 
-    /**
-     * Variable for the audio saved file type
-     */
-    private AudioFileFormat.Type fileType;
+    private AudioFormat audioFormat = getAudioFormat();
 
-    /**
-     * Variable that holds the saved audio file
-     */
-    protected File audioFile = null;
-
-    private AudioFormat audioFormat = null;
-
-    /**
-     *
-     * @param fileType File type to save the audio in<br>
-     * Example, to save as WAVE use AudioFileFormat.Type.WAVE
-     */
-    public Microphone(AudioFileFormat.Type fileType)
+    public Microphone()
     {
-        this.fileType = fileType;
-    }
-
-    /**
-     * Initializes the target data line.
-     */
-    private void initTargetDataLine()
-    {
-        DataLine.Info dataLineInfo = new DataLine.Info(TargetDataLine.class, getAudioFormat());
-        try
-        {
-            this.targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
-        }
-        catch (LineUnavailableException e)
-        {
-            LOG.error("Fail to get audio line", e);
-        }
-    }
-
-    /**
-     * Captures audio from the microphone and saves it a file
-     *
-     * @param audioFile The File to save the audio to
-     *
-     * @throws LineUnavailableException
-     * @throws java.io.IOException
-     */
-    public void startRecord(File audioFile) throws LineUnavailableException, IOException
-    {
-        this.state = CaptureState.PREPARING;
-        if (audioFile.exists())
-        {
-            audioFile.delete();
-        }
-        audioFile.createNewFile();
-        this.audioFile = audioFile;
-
-        if (this.targetDataLine == null)
-        {
-            initTargetDataLine();
-        }
-//        audioFile.deleteOnExit();
-        //Start recorder thread
-        new Thread(new CaptureThread()).start();
-
     }
 
     /**
@@ -145,80 +108,6 @@ public class Microphone implements Closeable
     }
 
     /**
-     * Opens the microphone for real. This method will record audio data into
-     * the targetDataLine object.
-     * If it's already open, it does nothing.
-     */
-    private void open()
-    {
-        if (targetDataLine == null)
-        {
-            initTargetDataLine();
-        }
-        if (!targetDataLine.isOpen() && !targetDataLine.isRunning() && !targetDataLine.isActive())
-        {
-            try
-            {
-                LOG.debug("Opening audio line");
-                this.state = CaptureState.RECORDING;
-                this.targetDataLine.open(this.audioFormat);
-                this.targetDataLine.start();
-                LOG.debug("Audio line opened");
-            }
-            catch (LineUnavailableException e)
-            {
-                LOG.error("Unable to open microphone", e);
-            }
-        }
-
-    }
-
-    /**
-     * Close the microphone capture, saving all processed audio to the specified
-     * file.<br>
-     * If already closed, this does nothing
-     */
-    @Override
-    public void close()
-    {
-
-        if (this.state != CaptureState.CLOSED)
-        {
-            LOG.debug("Stop recording");
-            targetDataLine.stop();
-            targetDataLine.close();
-            this.state = CaptureState.CLOSED;
-        }
-        LOG.debug("Recording Stopped");
-    }
-
-    /**
-     * Thread to capture the audio from the microphone and save it to a file
-     */
-    private class CaptureThread implements Runnable
-    {
-
-        /**
-         * Run method for thread
-         */
-        @Override
-        public void run()
-        {
-            LOG.debug("Start recording");
-            open();
-            try
-            {
-                AudioSystem.write(new AudioInputStream(targetDataLine), fileType, audioFile);
-            }
-            catch (IOException ex)
-            {
-                LOG.error("Fail to write audio data", ex);
-            }
-
-        }
-    }
-
-    /**
      * Gets the current state of Microphone
      *
      * @return RECORDING is returned when the Thread is recording Audio
@@ -234,33 +123,252 @@ public class Microphone implements Closeable
     }
 
     /**
-     * Sets the current state of Microphone
+     * Captures audio from the microphone.
      *
-     * @param state State from enumerator
+     *
+     * @throws LineUnavailableException This happens if unable to initialize
+     *                                  target data line, usually because
+     *                                  microphone or audio driver problem.
      */
-    private void setState(CaptureState state)
+    public void start() throws LineUnavailableException
     {
-        this.state = state;
+        if (this.state == CaptureState.CLOSED)
+        {
+            LOG.debug("Prepare to record");
+            state = CaptureState.PREPARING;
+            DataLine.Info dataLineInfo = new DataLine.Info(TargetDataLine.class, this.audioFormat);
+            targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
+            LOG.debug("Ready to record");
+            //Start recording
+            LOG.debug("Start recording");
+            state = CaptureState.RECORDING;
+            new Thread(new CaptureThread()).start();
+            LOG.debug("Recording started");
+        }
+        else
+        {
+            LOG.warn("Microphone is not yet closed, please check capture status");
+        }
     }
 
-    public File getAudioFile()
+    /**
+     * Close the microphone capture, saving all processed audio to the specified
+     * file.<br>
+     * If already closed, this does nothing
+     */
+    public void close()
     {
-        return audioFile;
+        if (this.state != CaptureState.CLOSED)
+        {
+            LOG.debug("Stop recording");
+            targetDataLine.stop();
+            targetDataLine.close();
+            this.state = CaptureState.CLOSED;
+            LOG.debug("Recording Stopped");
+        }
+        else
+        {
+            LOG.debug("Microphone not start yet");
+        }
     }
 
-    public void setAudioFile(File audioFile)
+    private class CaptureThread implements Runnable
     {
-        this.audioFile = audioFile;
+
+        //start point of valid audio data
+        private long start = -1;
+
+        //start point of invalid audio data
+        private long gap = -1;
+
+        @Override
+        public void run()
+        {
+            int frameSizeInBytes = audioFormat.getFrameSize();
+            int bufferLengthInFrames = targetDataLine.getBufferSize() / 8;
+            int bufferLengthInBytes = bufferLengthInFrames * frameSizeInBytes;
+            byte[] bytes = new byte[bufferLengthInBytes];
+
+            int numBytesRead;
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+            try
+            {
+                targetDataLine.open(audioFormat);
+                targetDataLine.start();
+            }
+            catch (LineUnavailableException e)
+            {
+
+            }
+
+            //if everything ok!
+            //start recording here
+            while (state.equals(CaptureState.RECORDING))
+            {
+                numBytesRead = targetDataLine.read(bytes, 0, bytes.length);
+                //if unable to read any byte from data line, something goes wrong
+                if (numBytesRead == -1)
+                {
+                    //stop work
+                    break;
+                }
+
+                /**
+                 * Compute volume in this audio byte data
+                 */
+                int level = (int) (Microphone.calculateLevel(bytes, 0, 0, audioFormat) * 100);
+                LOG.info("" + level);
+
+                long cur = System.currentTimeMillis();
+
+                //ignore unhearable audio
+                if (level > AUDIO_LEVEL_MIN)
+                {
+                    //So this loop guarantee to have audio data
+                    gap = -1;
+                    if (start == -1)
+                    {
+                        start = cur;
+                        out = new ByteArrayOutputStream();
+                    }
+
+                    try
+                    {
+                        //write audio data into byte array
+                        out.write(bytes);
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+                else
+                {
+                    //if audio output stream contain valid audio data
+                    //this is the time to send it out
+                    if (start != -1)
+                    {
+                        //if the right last loop contain valid audio data
+                        if (gap == -1)
+                        {
+                            gap = cur;
+                        }
+                        //send to google API if silent time lasts for a predefined GAP long
+                        if (cur - gap > WORD_GAPS)
+                        {
+                            System.out.println("长度：" + (cur - start));
+                            start = -1;
+                            gap = -1;
+
+                            byte[] byteArray = out.toByteArray();
+
+                            AudioInputStream audioInputStream
+                                = new AudioInputStream(new ByteArrayInputStream(byteArray),
+                                                       audioFormat,
+                                                       byteArray.length / audioFormat.getFrameSize());
+
+                            //Send file to google API
+//                            if (clipListener != null)
+//                            {
+//                                clipListener.captureClip(audioInputStream);
+//                            }
+                        }
+                    }
+                }
+            }
+
+        }
     }
 
-    public AudioFileFormat.Type getFileType()
+    /**
+     * Compute volume.
+     * Different audio format have separate ways of volume computing.
+     * Treat 16 and 8 bits differently.
+     * Also consider big endian and little endian
+     * <p>
+     * @param buffer
+     * @param readPoint
+     * @param leftOver
+     *                  <p>
+     * @param format
+     *                  <p>
+     * @return
+     */
+    public static float calculateLevel(byte[] buffer, int readPoint, int leftOver, AudioFormat format)
     {
-        return fileType;
-    }
+        int max = 0;
+        float level;
+        boolean use16Bit = (format.getSampleSizeInBits() == 16);
+        boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
+        boolean bigEndian = (format.isBigEndian());
 
-    public void setFileType(AudioFileFormat.Type fileType)
-    {
-        this.fileType = fileType;
+        if (use16Bit)
+        {
+            for (int i = readPoint; i < buffer.length - leftOver; i += 2)
+            {
+                int value;
+                // deal with endianness
+                int hiByte = (bigEndian ? buffer[i] : buffer[i + 1]);
+                int loByte = (bigEndian ? buffer[i + 1] : buffer[i]);
+                if (signed)
+                {
+                    short shortVal = (short) hiByte;
+                    shortVal = (short) ((shortVal << 8) | (byte) loByte);
+                    value = shortVal;
+                }
+                else
+                {
+                    value = (hiByte << 8) | loByte;
+                }
+                max = Math.max(max, value);
+            } // for
+        }
+        else
+        {
+            // 8 bit - no endianness issues, just sign
+            for (int i = readPoint; i < buffer.length - leftOver; i++)
+            {
+                int value = 0;
+                if (signed)
+                {
+                    value = buffer[i];
+                }
+                else
+                {
+                    short shortVal = 0;
+                    shortVal = (short) (shortVal | buffer[i]);
+                    value = shortVal;
+                }
+                max = Math.max(max, value);
+            }
+        }
+        // express max as float of 0.0 to 1.0 of max value
+        // of 8 or 16 bits (signed or unsigned)
+        if (signed)
+        {
+            if (use16Bit)
+            {
+                level = (float) max / MAX_16_BITS_SIGNED;
+            }
+            else
+            {
+                level = (float) max / MAX_8_BITS_SIGNED;
+            }
+        }
+        else
+        {
+            if (use16Bit)
+            {
+                level = (float) max / MAX_16_BITS_UNSIGNED;
+            }
+            else
+            {
+                level = (float) max / MAX_8_BITS_UNSIGNED;
+            }
+        }
+        return level;
     }
-
 }

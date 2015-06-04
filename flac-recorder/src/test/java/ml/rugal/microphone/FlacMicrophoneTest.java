@@ -1,6 +1,5 @@
 package ml.rugal.microphone;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import javax.sound.sampled.AudioFormat;
@@ -38,23 +37,14 @@ public class FlacMicrophoneTest
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testGetFlacFile() throws LineUnavailableException, IOException, InterruptedException
     {
         System.out.println("getFlacFile");
-        try (FlacMicrophone microphone = new FlacMicrophone())
-        {
-            File file = new File("test.wav");
 
-            System.out.println("Start");
-            microphone.startRecord(file);
-            Thread.sleep(4000);
-            microphone.close();
-            System.out.println("Stop");
-            File out = microphone.getFlacFile();
-//            file.deleteOnExit();
-//            out.deleteOnExit();
-        }
+        Microphone microphone = new Microphone();
+        microphone.start();
+        Thread.sleep(5000);
     }
 
     @Test
