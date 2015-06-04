@@ -12,5 +12,8 @@ package ml.rugal.googlespeech;
 public interface SpeechApiKey
 {
 
-    String key = "AIzaSyBqC4CJz7HcalA_2aP5bd_Ll8iyLbgxtJs";
+    //my key
+//    String key = "AIzaSyBqC4CJz7HcalA_2aP5bd_Ll8iyLbgxtJs";
+    //chrome's key, infinite quota
+    String key = "AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw";
 }
