@@ -104,10 +104,11 @@ public class APIRequest
      * <p>
      * @param audioFormat audio format used to specify the sample rate property.
      * <p>
-     * @return
-     *         <p>
-     * @throws java.net.URISyntaxException
-     * @throws java.io.IOException
+     * @return The whole response String from google. the first line usually be
+     *         a empty JSON indicating correct network transmission
+     * <p>
+     * @throws java.net.URISyntaxException when fails to build valid URI
+     * @throws java.io.IOException         when error on HTTP request
      */
     public String execute(byte[] data, AudioFormat audioFormat) throws URISyntaxException, IOException
     {

@@ -6,8 +6,8 @@ import javax.sound.sampled.AudioFormat;
 import ml.rugal.googlespeech.SpeechApiKey;
 import ml.rugal.googlespeech.gson.SpeechResponseData;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -18,6 +18,8 @@ public class APIRequesterTest
 {
 
     private final APIRequest requester = new APIRequest(SpeechApiKey.key);
+
+    private static final String TRANSCRIPT = "good morning Google how are you feeling today";
 
     public APIRequesterTest()
     {
@@ -34,18 +36,18 @@ public class APIRequesterTest
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testExecute() throws Exception
     {
-        System.out.println("execute");
-        File file = new File("E:\\Downloads\\good-morning-google.flac");
-
+        System.out.println("Test Google API with sample audio file:");
+        File file = new File("good-morning-google.flac");
         AudioFormat af = new AudioFormat(44100f, 16, 1, true, false);
 
         String prejson = requester.execute(file, af);
-        String json = prejson.substring(prejson.indexOf("\n") + 1);
+        String json = prejson.split("\n")[1];
+
         SpeechResponseData ob = new Gson().fromJson(json, SpeechResponseData.class);
-        System.out.println(ob.result[0].alternative[0].transcript);
+        Assert.assertEquals(TRANSCRIPT, ob.result[0].alternative[0].transcript);
     }
 
 }
