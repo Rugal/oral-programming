@@ -21,12 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class send FLAC audio file to google speech API and fetch back result.
+ * This class send FLAC audio file or byte array data to google speech API and
+ * fetch back result.
  * The API key must be activated by yourself. If you have problem with respect
  * to the API key, please refer to
  * http://www.chromium.org/developers/how-tos/api-keys
  * Up to 0.1 we only support FLAC type of audio, but I think this type is the
  * best for the already weak enough speech recognition.
+ * <p>
+ * Thanks for 李腾, https://github.com/gearcode, his work inspired me.
  *
  * @author Rugal Bernstein
  * @since 0.1
@@ -71,7 +74,8 @@ public class APIRequest
      * otherwise.
      *
      * @param file        a valid FLAC file
-     * @param audioFormat
+     * @param audioFormat To specify the audio format of this audio file.
+     *                    Actually only involving the sample rate property.
      *
      *
      * @return return a JSON which google directly return for us.
@@ -92,13 +96,14 @@ public class APIRequest
     }
 
     /**
-     * Another version of execute, use byte array instead of file.
-     * Beware the ContentType is audio/x-flac.
+     * Another version of execute, use byte array of extracted audio data
+     * instead of file.
+     * Beware the ContentType is "audio/x-flac".
      * <p>
-     * @param data
-     *                    <p>
-     * @param audioFormat
-     *                    <p>
+     * @param data        the byte array data of audio
+     * <p>
+     * @param audioFormat audio format used to specify the sample rate property.
+     * <p>
      * @return
      *         <p>
      * @throws java.net.URISyntaxException
