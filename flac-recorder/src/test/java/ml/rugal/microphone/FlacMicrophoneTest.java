@@ -3,12 +3,14 @@ package ml.rugal.microphone;
 import java.io.IOException;
 import java.util.Map;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
 import ml.rugal.recorder.microphone.Microphone;
+import ml.rugal.recorder.processor.ClipProcessor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -20,8 +22,6 @@ import org.junit.Test;
  */
 public class FlacMicrophoneTest
 {
-
-    private final String apikey = "AIzaSyBqC4CJz7HcalA_2aP5bd_Ll8iyLbgxtJs";
 
     public FlacMicrophoneTest()
     {
@@ -42,10 +42,20 @@ public class FlacMicrophoneTest
     public void testGetFlacFile() throws LineUnavailableException, IOException, InterruptedException
     {
         System.out.println("getFlacFile");
-
         Microphone microphone = new Microphone();
+        //Just a test
+        microphone.addAudioListener(new ClipProcessor()
+        {
+
+            @Override
+            public void process(AudioInputStream ais)
+            {
+                System.out.println("Here");
+            }
+        });
         microphone.start();
-        Thread.sleep(5000);
+        Thread.sleep(10000);
+        microphone.close();
     }
 
     @Test

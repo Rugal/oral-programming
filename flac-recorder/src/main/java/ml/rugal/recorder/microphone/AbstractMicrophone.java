@@ -5,7 +5,9 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
 /**
- *
+ * This is the abstract class for microphone. Including some basic and default
+ * functions as well as some static important values.
+ * <p>
  * @author Rugal Bernstein
  */
 public abstract class AbstractMicrophone
@@ -30,7 +32,7 @@ public abstract class AbstractMicrophone
     /**
      * Minimum volume, ignore if lower than this value
      */
-    public final int AUDIO_LEVEL_MIN = 10;
+    public final int AUDIO_LEVEL_MIN = 8;
 
     /**
      * TargetDataLine variable to store audio data from microphone.
@@ -75,6 +77,11 @@ public abstract class AbstractMicrophone
         return audioFormat;
     }
 
+    /**
+     * Set different audio format if you want.
+     * <p>
+     * @param audioFormat
+     */
     public void setAudioFormat(AudioFormat audioFormat)
     {
         this.audioFormat = audioFormat;
