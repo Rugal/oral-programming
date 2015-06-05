@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * Thanks to gearcode https://github.com/gearcode/speech-to-text, his work is
  * great!
  *
- * @author Luke Kuza, Aaron Gokaslan, gearcode, Rugal Bernstein
+ * @author Luke Kuza, Aaron Gokaslan, 李腾, Rugal Bernstein
  */
 public class Microphone extends AbstractMicrophone
 {
@@ -33,16 +33,21 @@ public class Microphone extends AbstractMicrophone
 
     private final List<ClipProcessor> processor = new ArrayList<>();
 
+    /**
+     *
+     */
     public Microphone()
     {
         this.audioFormat = defaultAudioFormat();
     }
 
     /**
+     * Use this method because instantiate a AudioFormat class is a little bit
+     * of troublesome.
      * The default audio format using specified parameters.
      * Using sample rate 16000, 16 bits, mono, signed, little endian.
      *
-     * @return
+     * @return give the default audio format.
      */
     private AudioFormat defaultAudioFormat()
     {
@@ -59,11 +64,19 @@ public class Microphone extends AbstractMicrophone
         return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
     }
 
+    /**
+     * Add a audio listener that could process the clip produced by microphone
+     * <p>
+     * @param p the processor listen to clip
+     */
     public void addAudioListener(ClipProcessor p)
     {
         processor.add(p);
     }
 
+    /**
+     * Clear all audio processor
+     */
     public void clearAudioListener()
     {
         processor.clear();
@@ -71,8 +84,6 @@ public class Microphone extends AbstractMicrophone
 
     /**
      * {@inheritDoc }
-     * <p>
-     * @throws javax.sound.sampled.LineUnavailableException
      */
     @Override
     public void start() throws LineUnavailableException

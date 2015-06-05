@@ -75,8 +75,8 @@ public class FlacStreamConverter
     /**
      * Convert WAV stream data to FLAC stream data.
      * <p>
-     * @param audioInputStream
-     * @param flacOutputStream
+     * @param audioInputStream input parameter to be converted
+     * @param flacOutputStream the converted output stream
      */
     public static void convertWaveToFlac(AudioInputStream audioInputStream, FLACOutputStream flacOutputStream)
     {
@@ -128,10 +128,11 @@ public class FlacStreamConverter
     /**
      * Easier method to convert waveStream to flacStream.
      * Just wrap the second parameter into the method body.
+     * Use this as the code looks better.
      * <p>
      * @param ais The input audio stream
      * <p>
-     * @return
+     * @return give output stream
      */
     public static ByteArrayOutputStream convert(AudioInputStream ais)
     {

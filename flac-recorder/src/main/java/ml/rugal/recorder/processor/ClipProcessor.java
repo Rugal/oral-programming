@@ -13,7 +13,7 @@ public abstract class ClipProcessor
     /**
      * Method to invoke when process audio data in real.
      * <p>
-     * @param ais
+     * @param ais just audio input stream for a valid segment
      */
     public abstract void process(AudioInputStream ais);
 }

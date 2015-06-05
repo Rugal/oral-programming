@@ -59,7 +59,7 @@ public class FlacMicrophoneTest
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testChannel() throws LineUnavailableException
     {
         Mixer mixer = AudioSystem.getMixer(null); // default mixer

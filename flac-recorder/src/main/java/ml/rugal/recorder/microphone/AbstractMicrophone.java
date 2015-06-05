@@ -46,11 +46,6 @@ public abstract class AbstractMicrophone
 
     protected AudioFormat audioFormat;
 
-    public TargetDataLine getTargetDataLine()
-    {
-        return targetDataLine;
-    }
-
     /**
      * Gets the current state of Microphone
      *
@@ -80,7 +75,7 @@ public abstract class AbstractMicrophone
     /**
      * Set different audio format if you want.
      * <p>
-     * @param audioFormat
+     * @param audioFormat new format to use
      */
     public void setAudioFormat(AudioFormat audioFormat)
     {
@@ -88,18 +83,18 @@ public abstract class AbstractMicrophone
     }
 
     /**
-     * Compute volume.
-     * Different audio format have separate ways of volume computing.
+     * Compute volume. This is a very important class, thanks to 李腾
+     * https://github.com/gearcode
+     * Different audio format have different ways of volume computing.
      * Treat 16 and 8 bits differently.
-     * Also consider big endian and little endian
+     * Also consider endian condition.
      * <p>
-     * @param buffer
-     * @param readPoint
-     * @param leftOver
-     *                  <p>
-     * @param format
-     *                  <p>
-     * @return
+     * @param buffer    the original WAV data array
+     * @param readPoint how many should me read from byte array
+     * @param leftOver  how many could left
+     * @param format    audio format that affect the computation
+     * <p>
+     * @return give the highest volume of the segment of byte array
      */
     public static float calculateLevel(byte[] buffer, int readPoint, int leftOver, AudioFormat format)
     {
@@ -128,7 +123,7 @@ public abstract class AbstractMicrophone
                     value = (hiByte << 8) | loByte;
                 }
                 max = Math.max(max, value);
-            } // for
+            }
         }
         else
         {
@@ -188,7 +183,7 @@ public abstract class AbstractMicrophone
 
     /**
      * Close the microphone capture, saving all processed audio to the specified
-     * file.<br>
+     * file.
      * If already closed, this does nothing
      */
     public abstract void close();
