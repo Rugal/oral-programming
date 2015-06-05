@@ -3,7 +3,6 @@ package ml.rugal.googlespeech.request;
 import com.google.gson.Gson;
 import java.io.File;
 import javax.sound.sampled.AudioFormat;
-import ml.rugal.googlespeech.SpeechApiKey;
 import ml.rugal.googlespeech.gson.SpeechResponseData;
 import org.junit.After;
 import org.junit.Assert;
