@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import javax.sound.sampled.AudioInputStream;
 import ml.rugal.googlespeech.request.APIRequest;
+import ml.rugal.googlespeech.request.SpeechApiKey;
 import ml.rugal.recorder.flac.FlacStreamConverter;
 import ml.rugal.recorder.processor.ClipProcessor;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class FlacClipProcessor extends ClipProcessor
     {
         ByteArrayOutputStream flacOS = FlacStreamConverter.convert(ais);
         byte[] data = flacOS.toByteArray();
-        APIRequest request = new APIRequest("AIzaSyBqC4CJz7HcalA_2aP5bd_Ll8iyLbgxtJs");
+        APIRequest request = new APIRequest(SpeechApiKey.key);
         try
         {
             String response = request.execute(data, ais.getFormat());
