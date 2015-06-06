@@ -1,11 +1,5 @@
 package ml.rugal.robot;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-import com.google.gson.Gson;
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.MenuItem;
@@ -15,21 +9,12 @@ import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
-import ml.rugal.googlespeech.gson.SpeechResponseData;
-import ml.rugal.googlespeech.request.APIRequest;
-import ml.rugal.microphone.FlacMicrophone;
-import ml.rugal.operator.CommandExecutor;
-import ml.rugal.operator.commandSpec.Command;
-import ml.rugal.operator.commandSpec.CommandFactory;
-import ml.rugal.operator.exception.CommandInvalidException;
-import ml.rugal.operator.exception.CommandNotFoundException;
+import ml.rugal.recorder.microphone.Microphone;
+import ml.rugal.robot.processor.FlacClipProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,32 +154,22 @@ public class MainFrame extends javax.swing.JFrame
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_clearButtonActionPerformed
     {//GEN-HEADEREND:event_clearButtonActionPerformed
         textArea.setText("");
+        microphone.close();
+        microphone.clearAudioListener();
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_startButtonActionPerformed
     {//GEN-HEADEREND:event_startButtonActionPerformed
-        File audio = new File("temp.wav");
-        startButton.setText("Recording");
+
+        microphone.addAudioListener(new FlacClipProcessor());
         try
         {
-
-            microphone.startRecord(audio);
-            Thread.sleep(4000);
-            microphone.close();
-
-            String prejson = request.execute(microphone.getFlacFile());
-            String json = prejson.substring(prejson.indexOf("\n") + 1);
-            SpeechResponseData ob = gson.fromJson(json, SpeechResponseData.class);
-            Command cmd = CommandFactory.constructCommand(ob.result[0].alternative[0].transcript.split(" "));
-            executor.execute(cmd);
-            textArea.append(ob.result[0].alternative[0].transcript);
-            textArea.append("\n");
+            microphone.start();
         }
-        catch (InterruptedException | CommandInvalidException | CommandNotFoundException | LineUnavailableException | IOException | URISyntaxException | AWTException ex)
+        catch (LineUnavailableException ex)
         {
-            LOG.error("Error while executing command", ex);
+            LOG.error("Unable to obtain audio data line");
         }
-        startButton.setText("Start");
     }//GEN-LAST:event_startButtonActionPerformed
 
     /**
@@ -255,13 +230,6 @@ public class MainFrame extends javax.swing.JFrame
 
     private TrayIcon trayIcon = null;
 
-    private final CommandExecutor executor = new CommandExecutor();
+    private Microphone microphone = new Microphone();
 
-    private FlacMicrophone microphone = new FlacMicrophone();
-
-    private final String apikey = "AIzaSyBqC4CJz7HcalA_2aP5bd_Ll8iyLbgxtJs";
-
-    private final APIRequest request = new APIRequest(apikey);
-
-    private Gson gson = new Gson();
 }
