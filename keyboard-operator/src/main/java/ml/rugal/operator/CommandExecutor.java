@@ -35,7 +35,7 @@ public class CommandExecutor
      * Method to execute an command.
      * Some command pre-check work such as privilege thing must be done in here.
      *
-     * @param order
+     * @param order A command indicate what to execute.
      *
      * @throws AWTException if robot can not be instantiated
      */

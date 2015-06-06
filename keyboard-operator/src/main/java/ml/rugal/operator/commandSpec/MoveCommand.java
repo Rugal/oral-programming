@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Command for move on screen.<BR/>
- * Format below are allowed:<BR/>
- * 1. &lt; key-word &gt; direction [step]<BR/>
+ * Command for move on screen.<BR>
+ * Format below are allowed:<BR>
+ * 1. &lt; key-word &gt; direction [step]<BR>
  * 2. go to direction [step]
- * 3. direction [step]<BR/>
+ * 3. direction [step]<BR>
  *
  * @author Rugal Bernstein
  * @since 0.1
@@ -75,11 +75,19 @@ public class MoveCommand extends Command
 
     private int step = 1;
 
+    /**
+     * Get a move command with specified direction
+     * <p>
+     * @param move specified direction
+     */
     public MoveCommand(Move move)
     {
         this.direction = move;
     }
 
+    /**
+     *
+     */
     protected MoveCommand()
     {
     }
@@ -144,6 +152,16 @@ public class MoveCommand extends Command
         return value;
     }
 
+    /**
+     * This enumerator defines some directions used in moving, up till 0.1 we
+     * have up, down, left and right directions.
+     * Those duplicated words that sound similar are for the ambiguous process
+     * for higher reflection accuracy.
+     * <p>
+     * For instance AT are the ambiguous word for UP.
+     * <p>
+     * @since 0.1
+     */
     public enum Move
     {
 
