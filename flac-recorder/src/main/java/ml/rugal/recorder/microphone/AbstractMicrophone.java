@@ -27,12 +27,12 @@ public abstract class AbstractMicrophone
     /**
      * Interval between valid audio data(ms)
      */
-    public final long WORD_GAPS_DURATION = 2000;
+    public final long DEFAULT_WORD_GAPS_DURATION = 2000;
 
     /**
      * Minimum volume, ignore if lower than this value
      */
-    public final int AUDIO_LEVEL_MIN = 8;
+    public final int DEFAULT_AUDIO_LEVEL_MIN = 6;
 
     /**
      * TargetDataLine variable to store audio data from microphone.
@@ -44,7 +44,63 @@ public abstract class AbstractMicrophone
      */
     protected CaptureState state = CaptureState.CLOSED;
 
-    protected AudioFormat audioFormat;
+    protected AudioFormat audioFormat = null;
+
+    protected int minimumVolumn = DEFAULT_AUDIO_LEVEL_MIN;
+
+    private long gapDuration = DEFAULT_WORD_GAPS_DURATION;
+
+    public AbstractMicrophone()
+    {
+        minimumVolumn = DEFAULT_AUDIO_LEVEL_MIN;
+        gapDuration = DEFAULT_WORD_GAPS_DURATION;
+    }
+
+    public AbstractMicrophone(int minVolume, long gap)
+    {
+        this.minimumVolumn = minVolume;
+        this.gapDuration = gap;
+    }
+
+    /**
+     * Get the value of gapDuration
+     *
+     * @return the value of gapDuration
+     */
+    public long getGapDuration()
+    {
+        return gapDuration;
+    }
+
+    /**
+     * Set the value of gapDuration
+     *
+     * @param gapDuration new value of gapDuration
+     */
+    public void setGapDuration(long gapDuration)
+    {
+        this.gapDuration = gapDuration;
+    }
+
+    /**
+     * Get the value of minimumVolumn
+     *
+     * @return the value of minimumVolumn
+     */
+    public int getMinimumVolumn()
+    {
+        return minimumVolumn;
+    }
+
+    /**
+     * Set the value of minimumVolumn
+     *
+     * @param minimumVolumn new value of minimumVolumn
+     */
+    public void setMinimumVolumn(int minimumVolumn)
+    {
+        this.minimumVolumn = minimumVolumn;
+    }
 
     /**
      * Gets the current state of Microphone

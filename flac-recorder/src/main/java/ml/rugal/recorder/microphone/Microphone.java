@@ -38,6 +38,13 @@ public class Microphone extends AbstractMicrophone
      */
     public Microphone()
     {
+        super();
+        this.audioFormat = defaultAudioFormat();
+    }
+
+    public Microphone(int minVolume, long gap)
+    {
+        super(minVolume, gap);
         this.audioFormat = defaultAudioFormat();
     }
 
@@ -182,7 +189,7 @@ public class Microphone extends AbstractMicrophone
                 LOG.info("" + level);
                 long currentTime = System.currentTimeMillis();
                 //ignore unhearable audio
-                if (level > AUDIO_LEVEL_MIN)
+                if (level > DEFAULT_AUDIO_LEVEL_MIN)
                 {
                     //So this loop guarantee to have audio data
                     gapPoint = -1;
@@ -212,7 +219,7 @@ public class Microphone extends AbstractMicrophone
                         {
                             gapPoint = currentTime;
                         }
-                        if (currentTime - gapPoint > WORD_GAPS_DURATION)
+                        if (currentTime - gapPoint > DEFAULT_WORD_GAPS_DURATION)
                         {//send to google API iff silent time lasts for a predefined GAP long
                             LOG.debug("Clip length：" + (currentTime - startPoint));
                             startPoint = -1;
