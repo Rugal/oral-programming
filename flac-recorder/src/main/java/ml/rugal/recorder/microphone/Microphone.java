@@ -151,7 +151,7 @@ public class Microphone extends AbstractMicrophone
         public void run()
         {
             int frameSizeInBytes = audioFormat.getFrameSize();
-            int bufferLengthInFrames = targetDataLine.getBufferSize() / 8;
+            int bufferLengthInFrames = targetDataLine.getBufferSize() / 4;
             int bufferLengthInBytes = bufferLengthInFrames * frameSizeInBytes;
             byte[] bytes = new byte[bufferLengthInBytes];
 
@@ -167,7 +167,7 @@ public class Microphone extends AbstractMicrophone
             }
             catch (LineUnavailableException e)
             {
-                LOG.error("Unable to obtain required resources and start data line.");
+                LOG.error("Unable to obtain required resources to start data line.");
                 LOG.warn("Force to stop recording");
                 close();
             }

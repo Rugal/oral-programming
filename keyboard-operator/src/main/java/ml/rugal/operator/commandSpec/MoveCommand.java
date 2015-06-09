@@ -166,13 +166,13 @@ public class MoveCommand extends Command
     {
 
         //UP
-        UP(KeyEvent.VK_UP), AT(KeyEvent.VK_UP), ART(KeyEvent.VK_UP), OFF(KeyEvent.VK_UP), OF(KeyEvent.VK_UP), APP(KeyEvent.VK_UP), FUCK(KeyEvent.VK_UP), BAT(KeyEvent.VK_UP), OP(KeyEvent.VK_UP),
+        UP(KeyEvent.VK_UP), AT(KeyEvent.VK_UP), ART(KeyEvent.VK_UP), OFF(KeyEvent.VK_UP), OF(KeyEvent.VK_UP), APP(KeyEvent.VK_UP), FUCK(KeyEvent.VK_UP), BAT(KeyEvent.VK_UP), OP(KeyEvent.VK_UP), AA(KeyEvent.VK_UP), A(KeyEvent.VK_UP), AN(KeyEvent.VK_UP),
         //DOWN
         DOWN(KeyEvent.VK_DOWN), DONE(KeyEvent.VK_DOWN), BANK(KeyEvent.VK_DOWN),
         //LEFT
         LEFT(KeyEvent.VK_LEFT), LOFT(KeyEvent.VK_LEFT), LIVE(KeyEvent.VK_LEFT), LEAVE(KeyEvent.VK_LEFT), LAST(KeyEvent.VK_LEFT), LAUGH(KeyEvent.VK_LEFT),
         //RIGHT
-        RIGHT(KeyEvent.VK_RIGHT), LIGHT(KeyEvent.VK_RIGHT), WRITE(KeyEvent.VK_RIGHT), WRIGHT(KeyEvent.VK_RIGHT), WHITE(KeyEvent.VK_RIGHT),;
+        RIGHT(KeyEvent.VK_RIGHT), LIGHT(KeyEvent.VK_RIGHT), WRITE(KeyEvent.VK_RIGHT), WRIGHT(KeyEvent.VK_RIGHT), WHITE(KeyEvent.VK_RIGHT), NIGHT(KeyEvent.VK_RIGHT);
 
         private final int keyEvent;
 
