@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 import ml.rugal.recorder.microphone.Microphone;
 import ml.rugal.robot.processor.FlacClipProcessor;
 import org.slf4j.Logger;
@@ -161,7 +162,7 @@ public class MainFrame extends javax.swing.JFrame
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_startButtonActionPerformed
     {//GEN-HEADEREND:event_startButtonActionPerformed
 
-        microphone.addAudioListener(new FlacClipProcessor());
+        microphone.addAudioListener(new FlacClipProcessor(this));
         try
         {
             microphone.start();
@@ -231,5 +232,15 @@ public class MainFrame extends javax.swing.JFrame
     private TrayIcon trayIcon = null;
 
     private Microphone microphone = new Microphone();
+
+    public JTextArea getTextArea()
+    {
+        return textArea;
+    }
+
+    public Microphone getMicrophone()
+    {
+        return microphone;
+    }
 
 }

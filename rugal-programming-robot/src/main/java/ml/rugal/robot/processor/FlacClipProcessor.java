@@ -14,6 +14,7 @@ import ml.rugal.operator.commandSpec.Command;
 import ml.rugal.operator.commandSpec.CommandFactory;
 import ml.rugal.recorder.flac.FlacStreamConverter;
 import ml.rugal.recorder.processor.ClipProcessor;
+import ml.rugal.robot.MainFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,18 @@ public class FlacClipProcessor extends ClipProcessor
 
     private static final Logger LOG = LoggerFactory.getLogger(FlacClipProcessor.class.getName());
 
+    private final MainFrame frame;
+
+    public FlacClipProcessor(MainFrame Frame)
+    {
+        this.frame = Frame;
+    }
+
+    public FlacClipProcessor()
+    {
+        this(null);
+    }
+
     @Override
     public void process(AudioInputStream ais)
     {
@@ -44,8 +57,14 @@ public class FlacClipProcessor extends ClipProcessor
             String json = response.split("\n")[1];
             SpeechResponseData ob = gson.fromJson(json, SpeechResponseData.class);
             LOG.info(ob.result[0].alternative[0].transcript);
+            if (frame != null)
+            {
+                frame.getTextArea().append(ob.result[0].alternative[0].transcript);
+                frame.getTextArea().append("\n");
+            }
             Command command = CommandFactory.constructCommand(ob.result[0].alternative[0].transcript.split(" "));
             executor.execute(command);
+
         }
         catch (URISyntaxException ex)
         {
